@@ -5,7 +5,7 @@
  */
 
 // Main
-exports.StaticBot = require('./client/staticbot');
+exports.CLRP = require('./client/clrp');
 
 /**
  * EVENTS

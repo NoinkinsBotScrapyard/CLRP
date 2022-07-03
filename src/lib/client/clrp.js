@@ -1,6 +1,6 @@
 const { Client } = require('discord.js');
 
-class StaticBot extends Client {
+class CLRP extends Client {
     constructor() {
         super({
             intents: 32767,
@@ -8,4 +8,4 @@ class StaticBot extends Client {
     }
 }
 
-module.exports = StaticBot;
+module.exports = CLRP;

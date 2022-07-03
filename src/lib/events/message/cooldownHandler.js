@@ -5,7 +5,7 @@ const { Collection } = require('discord.js');
 class CooldownHandler {
     constructor() {}
 
-    async cooldown(options) {
+    static async cooldown(options) {
         const {
             mult = 1000,
             cooldowns,

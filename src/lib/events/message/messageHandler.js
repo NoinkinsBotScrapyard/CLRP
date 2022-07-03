@@ -1,3 +1,5 @@
+const CooldownHandler = require('./cooldownHandler')
+
 // Class
 class MessageHandler {
     constructor() {}
@@ -9,7 +11,7 @@ class MessageHandler {
 		// With all parameters(Required)
 		messageHandler.afk({ message: message, db: db })
 	*/
-    async afk(options) {
+    static async afk(options) {
         const { message, db } = options;
         if (db.has(`afk_${message.author.id}+${message.guild.id}`)) {
             const info = db.get(`afk_${message.author.id}+${message.guild.id}`);
@@ -26,7 +28,7 @@ class MessageHandler {
             ) {
                 message.channel.send(
                     message.mentions.members.first().user.tag +
-                        'is afk, ' +
+                        ' is afk, ' +
                         db.get(
                             `afk_${message.mentions.members.first().id}+${
                                 message.guild.id
@@ -45,15 +47,15 @@ class MessageHandler {
 		// With all parameters(Required)
 		messageHandler.commands({ message: message, db: db, client: client })
 	*/
-    async commands(options) {
-        const { message, db, client, cooldownHandler, cooldowns } = options;
+    static async commands(options) {
+        const { message, db, client, cooldowns } = options;
         try {
             let prefix = await db.fetch(`prefix_${message.guildId}`);
             if (prefix) {
                 if (message.mentions.users.first()) {
                     if (
-                        message.mentions.users.first().id ===
-                        '961251547772235777'
+                        message.mentions.users.first().id ==
+                        '982949470884990978'
                     )
                         return message.channel.send(
                             `My prefix in **${message.guild.name}** is ${prefix}`,
@@ -109,7 +111,7 @@ class MessageHandler {
                     }
                 }
 
-                cooldownHandler.cooldown({
+                CooldownHandler.cooldown({
                     message: message,
                     cooldowns: cooldowns,
                     message: message,
@@ -118,11 +120,11 @@ class MessageHandler {
                     command: command,
                 });
             } else {
-                let standardPrefix = '!';
+                let standardPrefix = '?';
                 if (message.mentions.users.first()) {
                     if (
-                        message.mentions.users.first().id ===
-                        '961251547772235777'
+                        message.mentions.users.first().id ==
+                        '982949470884990978'
                     )
                         return message.channel.send(
                             `My Prefix in **${message.guild.name}** is ${standardPrefix}`,
@@ -145,7 +147,9 @@ class MessageHandler {
                         c.aliases?.includes(cmd.toLowerCase()),
                     );
 
-                if (
+                if (!command) return;
+
+				if (
                     command.userperms.length > 0 ||
                     command.botperms.length > 0
                 ) {
@@ -155,7 +159,7 @@ class MessageHandler {
                     }
 
                     for (const permission of command.userperms) {
-                        if (!message.member.hasPermission(permission)) {
+                        if (!message.member.permissions.has(permission)) {
                             return message.channel.send(
                                 `<:vError:725270799124004934> Insufficient Permission! \`${permission}\` required.`,
                             );
@@ -166,18 +170,9 @@ class MessageHandler {
                         command.botperms = command.botperms.split();
                         validatePermissions(command.botperms);
                     }
-
-                    for (const permission of command.botperms) {
-                        if (!message.guild.me.hasPermission(permission)) {
-                            return message.channel.send(
-                                `<:vError:725270799124004934> Insufficient Permission! I require \`${permission}\`.`,
-                            );
-                        }
-                    }
                 }
-
-                if (!command) return;
-                cooldownHandler.cooldown({
+				
+                CooldownHandler.cooldown({
                     message: message,
                     cooldowns: cooldowns,
                     message: message,
